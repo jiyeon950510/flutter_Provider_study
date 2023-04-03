@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class Counter extends StateNotifier<int>{
   Counter() : super(0); // 창고
 
+  void increment(){
+    state ++;
+  }
 
 }
 
@@ -17,7 +20,7 @@ void main() {
     // For widgets to be able to read providers, we need to wrap the entire
     // application in a "ProviderScope" widget.
     // This is where the state of our providers will be stored.
-    ProviderScope( //제일 꼭대기에 provider 를 덮어줘야함 -> 데이터 변경부분만 다시 그려줌
+    ProviderScope(
       child: MyApp(),
     ),
   );
@@ -27,7 +30,7 @@ void main() {
 class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final int value = ref.read(counterProvider);
+    final int value = ref.watch(counterProvider);
 
     return MaterialApp(
       home: Scaffold(
@@ -36,7 +39,9 @@ class MyApp extends ConsumerWidget {
           child: Text("$value"),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: (){},
+          onPressed: (){
+            ref.read(counterProvider.notifier).increment();
+          },
           child: Icon(Icons.add),
         ),
       ),
